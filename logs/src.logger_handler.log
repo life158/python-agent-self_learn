@@ -1,0 +1,22 @@
+2026-11-02 11:00:51,984 - src.logger_handler - ERROR - 调用API生成问答失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 42, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1395, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1480, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1253, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - Invalid API-key provided. For details, see: https://www.alibabacloud.com/help/en/model-studio/error-code#apikey-error

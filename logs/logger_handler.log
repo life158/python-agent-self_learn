@@ -1,0 +1,120 @@
+2026-10-31 18:22:36,320 - logger_handler - ERROR - 调用API生成问答失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 41, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1395, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1480, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1253, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - Invalid API-key provided. For details, see: https://www.alibabacloud.com/help/en/model-studio/error-code#apikey-error
+2026-10-31 18:22:36,400 - logger_handler - ERROR - RAG主流程生成问答失败。
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rerank.py", line 172, in main
+    answer = answer_question(question, context)
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 41, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1395, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1480, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1253, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - Invalid API-key provided. For details, see: https://www.alibabacloud.com/help/en/model-studio/error-code#apikey-error
+2026-11-01 17:03:40,213 - logger_handler - ERROR - Embedding API 调用失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\embedding.py", line 47, in embed_text
+    response = client.embeddings.create(input=text, model="text-embedding-v4")
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\resources\embeddings.py", line 113, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/embeddings",
+        ^^^^^^^^^^^^^^
+    ...<9 lines>...
+        cast_to=CreateEmbeddingResponse,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1480, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1253, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - Invalid API-key provided. For details, see: https://www.alibabacloud.com/help/en/model-studio/error-code#apikey-error
+2026-11-01 17:28:30,770 - logger_handler - ERROR - chroma检索或结果处理失败!
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\retrieve.py", line 26, in retrieve
+    result = collection.query(query_embeddings=[query], n_results=min(count, k),
+                              include=["documents", "metadatas", "distances"])
+  File "D:\work_data\PythonProject\agent\self_learn\src\retrieve.py", line 63, in query
+    raise RuntimeError("模拟chroma数据库查询失败")
+RuntimeError: 模拟chroma数据库查询失败
+2026-11-01 18:47:05,946 - logger_handler - ERROR - 调用API生成问答失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 42, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1395, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1480, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1253, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - Invalid API-key provided. For details, see: https://www.alibabacloud.com/help/en/model-studio/error-code#apikey-error
+2026-11-01 18:47:06,055 - logger_handler - ERROR - RAG主流程执行失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rerank.py", line 283, in main
+    answer = answer_question(question, context)
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 42, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1395, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1480, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\work_data\PythonProject\agent\self_learn\.venv\Lib\site-packages\openai\_base_client.py", line 1253, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - Invalid API-key provided. For details, see: https://www.alibabacloud.com/help/en/model-studio/error-code#apikey-error

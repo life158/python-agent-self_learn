@@ -1,18 +1,16 @@
 from encodings import utf_8
 from pathlib import Path
 
-def read_file():
-    #获取文件的根目录
-    project_root = Path(__file__).resolve().parent
-    #构建文件路径
-    project_path = project_root.joinpath("data").joinpath("samples.txt")
-    #读取文件的内容
-    content = project_path.read_text(encoding="utf-8")
-    #输出结果
-    print("文件读取开始！")
-    print("content:", content)
-    print("文件读取结束!")
+def read_file(path, encoding="utf-8")->str:
+    file_path = Path(path).resolve()
+    if not file_path.exists():
+        raise FileNotFoundError(f"{file_path} does not exist")
+    if not file_path.is_file():
+        raise FileNotFoundError(f"{file_path} is not a file")
+    return file_path.read_text(encoding=encoding)
+
 if __name__ == "__main__":
-   read_file()
+    path = ("./data/samples.txt")
+    print(read_file(path))
 
 
