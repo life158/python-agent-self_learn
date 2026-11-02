@@ -44,15 +44,10 @@
 #     result = calculate_score(question,candidate_keywords)
 #     print("该问题的评分为:", result)
 #     print("该问题提取出来的关键词为:", keywords)
-import math
+from functools import lru_cache
 
-from langchain_core import documents
-from sentence_transformers import  CrossEncoder
-from torch.nn.functional import threshold
+from sentence_transformers import CrossEncoder
 
-from src.rag_service import build_context,answer_question
-from src.retrieve import retrieve
-from src.vector_store import collection
 from src.logger_handler import get_logger
 logger = get_logger(__name__)
 class Reranker:
@@ -108,7 +103,12 @@ class Reranker:
         return sorted_results[:top_k]
 
 
-reranker = Reranker("BAAI/bge-reranker-base")
+@lru_cache(maxsize=1)
+def get_reranker(
+        model_name: str = "BAAI/bge-reranker-base"
+) -> Reranker:
+    """按需创建并复用重排序器，避免模块导入时下载或加载模型。"""
+    return Reranker(model_name)
 
 #检索结果数量不代表检索质量，必须判断检索内容是否具有足够的相关性
 # def is_relevant(

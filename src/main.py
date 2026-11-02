@@ -4,7 +4,7 @@ from src.vector_store import collection
 from src.logger_handler import get_logger
 import math
 import time
-from src.rerank import reranker
+from src.rerank import get_reranker
 logger = get_logger(__name__)
 #检索结果数量不代表检索质量，必须判断检索内容是否具有足够的相关性
 def is_relevant(
@@ -105,6 +105,7 @@ def main():
         # 8. 执行重排序，并记录耗时
         start_time = time.perf_counter()
 
+        reranker = get_reranker()
         ranked_results = reranker.rerank(
             question=question,
             results=reference["primary_results"],
