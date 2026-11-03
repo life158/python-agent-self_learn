@@ -4,17 +4,32 @@ from src.text_splitter import split_documents
 from src.file_handler import load_file
 from langchain_core.documents import Document
 from src.embedding import embed_documents
+from functools import lru_cache
 #创建本地持久化客户端
-path = "data/chroma_db"
-file_root = Path(__file__).resolve().parent.parent
-file_path = file_root.joinpath(path).resolve()
-client = chromadb.PersistentClient(
-    path=file_path
-)
-#获取或创建知识集合
-collection = client.get_or_create_collection(name="knowledge_base")
+from functools import lru_cache
+from pathlib import Path
+import chromadb
 
-print(collection.name)
+
+@lru_cache(maxsize=1)
+def get_chroma_client(path: str):
+    client = chromadb.PersistentClient(
+        path=path
+    )
+    return client
+
+
+@lru_cache(maxsize=1)
+def get_collection():
+    path = Path(__file__).resolve().parent.parent / "data" / "chroma_db"
+
+    client = get_chroma_client(str(path))
+
+    collection = client.get_or_create_collection(
+        name="knowledge_base"
+    )
+
+    return collection
 
 
 def add_chunks(collection,chunks,embeddings):

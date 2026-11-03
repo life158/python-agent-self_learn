@@ -45,9 +45,6 @@
 #     print("该问题的评分为:", result)
 #     print("该问题提取出来的关键词为:", keywords)
 from functools import lru_cache
-
-from sentence_transformers import CrossEncoder
-
 from src.logger_handler import get_logger
 logger = get_logger(__name__)
 class Reranker:
@@ -56,6 +53,8 @@ class Reranker:
         if not isinstance(model_name,str) or not model_name.strip():
             raise ValueError("model_name must be not_empty string")
         # 2.加载 CrossEncoder模型
+        # 延迟导入 CrossEncoder
+        from sentence_transformers import CrossEncoder
         self.model = CrossEncoder(model_name)
 
     def compute_scores(self,question:str,documents:list[str])-> list[float]:

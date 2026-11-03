@@ -1,10 +1,11 @@
 from src.rag_service import build_context,answer_question
 from src.retrieve import retrieve
-from src.vector_store import collection
 from src.logger_handler import get_logger
 import math
 import time
 from src.rerank import get_reranker
+from src.vector_store import get_collection
+
 logger = get_logger(__name__)
 #检索结果数量不代表检索质量，必须判断检索内容是否具有足够的相关性
 def is_relevant(
@@ -87,7 +88,7 @@ def main():
     try:
         # 4. 执行向量检索，并记录耗时
         start_time = time.perf_counter()
-
+        collection = get_collection()
         reference = retrieve(question, collection, k=10)
 
         result["retrieval_time"] = time.perf_counter() - start_time

@@ -19,32 +19,27 @@
 #     chunks = ["Chunk 1", "Chunk 2", "Chunk 3"]
 #     similarities = [0.35, 0.92, 0.61]
 #     print(retrieve_top_k(chunks, similarities, k=2))
-
-import os
-from dotenv import load_dotenv
-from openai import OpenAI
-from src.text_splitter import split_documents
-from src.file_handler import load_file
-from langchain_core.documents import Document
+from functools import lru_cache
 import math
 from src.logger_handler import get_logger
-load_dotenv()
+from config.settings import MODEL_API_KEY, MODEL_BASE_URL, EMBEDDING_MODEL_ID,validate_embedding_settings
 logger = get_logger(__name__)
 
-#从环境变量中读取API_key
-MODEL_API_KEY = os.getenv("MODEL_API_KEY")
-# MODEL_API_KEY = "sk-ws-H.PEPMIXR.a5jz.MEQCIAn9XLiS5e-g1fgF1IHUIAN2T13Wp3Z-yVNFfDpbJvYsAiB3bYQ0X6oRV5KhNEH90pTecMpp90WVqSFbgTlhGhA4Hk"
-MODEL_BASE_URL = os.getenv("MODEL_BASE_URL")
-client = OpenAI(api_key=MODEL_API_KEY, base_url=MODEL_BASE_URL)
+@lru_cache(maxsize=1)
+def get_embedding_client():
+    validate_embedding_settings(model_api_key=MODEL_API_KEY,model_base_url=MODEL_BASE_URL,embedding_model_id=EMBEDDING_MODEL_ID)
+    from openai import OpenAI
+    client = OpenAI(api_key=MODEL_API_KEY, base_url=MODEL_BASE_URL)
+    return client
+
 
 def embed_text(text:str)->list[float]:
     #检查输入的合法性
     if not isinstance(text, str) or not text.strip():
         raise ValueError("text must not be empty string")
-    if not MODEL_API_KEY or not MODEL_BASE_URL:
-        raise ValueError("API配置缺失，请检查环境变量")
     try:
-        response = client.embeddings.create(input=text, model="text-embedding-v4")
+        client = get_embedding_client()
+        response = client.embeddings.create(input=text, model=EMBEDDING_MODEL_ID)
         return response.data[0].embedding
     except Exception:
         logger.exception("Embedding API 调用失败")
@@ -80,10 +75,15 @@ def embed_documents(texts: list[str]) -> list[list[float]]:
     if not all(isinstance(item, str) and item.strip() for item in texts):
         raise ValueError("每条文本都必须是非空字符串")
     #创建客户端
-    response = client.embeddings.create(input=texts,model="text-embedding-v4")
-    #为了确保返回向量与输入文本的顺序一致，可以根据 API 响应中的 index 排序
-    items = sorted(response.data, key=lambda item:item.index)
-    return [item.embedding for item in items]
+    try:
+        client = get_embedding_client()
+        response = client.embeddings.create(input=texts, model=EMBEDDING_MODEL_ID)
+        # 为了确保返回向量与输入文本的顺序一致，可以根据 API 响应中的 index 排序
+        items = sorted(response.data, key=lambda item: item.index)
+        return [item.embedding for item in items]
+    except Exception:
+        logger.exception("Embedding API 调用失败")
+        raise
 
 
 if __name__ == "__main__":

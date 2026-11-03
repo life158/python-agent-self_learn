@@ -1,16 +1,20 @@
-from unittest.mock import patch
+import subprocess
+import sys
 
-from src.rerank import get_reranker
 
+def test_rerank_lazy_import():
 
-def test_get_reranker_loads_model_lazily_and_reuses_instance():
-    get_reranker.cache_clear()
+    code = """
+import sys
+import src.rerank
 
-    with patch("src.rerank.CrossEncoder") as mock_cross_encoder:
-        first = get_reranker("test-model")
-        second = get_reranker("test-model")
+assert "sentence_transformers" not in sys.modules
+"""
 
-    mock_cross_encoder.assert_called_once_with("test-model")
-    assert first is second
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        capture_output=True,
+        text=True
+    )
 
-    get_reranker.cache_clear()
+    assert result.returncode == 0

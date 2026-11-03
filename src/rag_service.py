@@ -1,16 +1,10 @@
-import os
-from dotenv import load_dotenv
 from openai import OpenAI
 from src.retrieve import retrieve
-from src.vector_store import collection
 from src.logger_handler import get_logger
-
+from src.vector_store import get_collection
+from config.settings import MODEL_API_KEY, MODEL_BASE_URL, MODEL_ID,validate_model_settings
 logger = get_logger(__name__)
-load_dotenv()
-MODEL_API_KEY = os.getenv("MODEL_API_KEY")
-# MODEL_API_KEY = "sk-ws-H.PEPMIXR.a5jz.MEQCIAn9XLiS5e-g1fgF1IHUIAN2T13Wp3Z-yVNFfDpbJvYsAiB3bYQ0X6oRV5KhNEH90pTecMpp90WVqSFbgTlhGhA4Hk"
-MODEL_BASE_URL = os.getenv("MODEL_BASE_URL")
-MODEL_ID = os.getenv("MODEL_ID")
+
 def build_context(primary_results:list[dict])->str:
     # 1.创建一个空列表，用于保存文本片段
     results_list = []
@@ -28,6 +22,8 @@ def answer_question(question:str,context:str)->str:
     :param context:
     :return:
     '''
+    #先检查配置
+    validate_model_settings(model_api_key=MODEL_API_KEY,model_base_url=MODEL_BASE_URL,model_id=MODEL_ID)
     try:
         messages = [
             {
@@ -54,6 +50,7 @@ def main():
     question = input("请输入你想问的问题:").strip()
     if not question:
         raise ValueError("问题不能为空字符串!")
+    collection = get_collection()
     reference = retrieve(question,collection,k=3)
     print("\n========== 检索结果分析 ==========")
     for item in (

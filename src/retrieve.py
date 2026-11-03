@@ -1,7 +1,6 @@
 from unittest import result
 
 from src.embedding import embed_text
-from src.vector_store import collection
 from src.logger_handler import get_logger
 logger = get_logger(__name__)
 def retrieve(question:str,collection,k:int=3)->dict:

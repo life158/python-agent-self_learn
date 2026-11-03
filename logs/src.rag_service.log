@@ -24,3 +24,55 @@ Traceback (most recent call last):
   File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1241, in _execute_mock_call
     raise effect
 RuntimeError: 模拟千问API调用失败
+2026-11-02 18:07:40,897 - src.rag_service - ERROR - 调用API生成问答失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 44, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1241, in _execute_mock_call
+    raise effect
+RuntimeError: 模拟千问API调用失败
+2026-11-02 20:26:29,837 - src.rag_service - ERROR - 调用API生成问答失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 44, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1241, in _execute_mock_call
+    raise effect
+RuntimeError: 模拟千问API调用失败
+2026-11-03 15:57:28,878 - src.rag_service - ERROR - 调用API生成问答失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 40, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1241, in _execute_mock_call
+    raise effect
+RuntimeError: 模拟千问API调用失败
+2026-11-03 20:12:56,832 - src.rag_service - ERROR - 调用API生成问答失败
+Traceback (most recent call last):
+  File "D:\work_data\PythonProject\agent\self_learn\src\rag_service.py", line 40, in answer_question
+    response = client.chat.completions.create(model=MODEL_ID, messages=messages)
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\life\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py", line 1241, in _execute_mock_call
+    raise effect
+RuntimeError: 模拟千问API调用失败
