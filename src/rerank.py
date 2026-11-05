@@ -57,7 +57,7 @@ class Reranker:
         from sentence_transformers import CrossEncoder
         self.model = CrossEncoder(model_name)
 
-    def compute_scores(self,question:str,documents:list[str])-> list[float]:
+    def compute_scores(self,question:str,documents:list[str],batch_size:int = 16)-> list[float]:
         # 1.检查输入的合法性
         # 1.1检查question是否为非空字符串
         if not isinstance(question,str) or not question.strip():
@@ -65,6 +65,8 @@ class Reranker:
         # 1.2检查documents是否为非空列表
         if not isinstance(documents,list) or not documents:
             raise ValueError("documents must be not_empty list")
+        if not isinstance(batch_size,int) or isinstance(batch_size,bool)or batch_size<=0:
+            raise ValueError("batch_size must be positive integer")
         # 1.3检查documents 中的元素是否都是字符串
         for document in documents:
             if not isinstance(document,str) or not document.strip():
@@ -72,14 +74,14 @@ class Reranker:
         # 2.将question和documents配对
         pairs =[[question,document] for document in documents]
         # 3.调用CrossEncoder模型预测
-        scores = self.model.predict(pairs)
+        scores = self.model.predict(pairs,batch_size=batch_size,show_progress_bar=False)
        # 4.返回评分结果
         return scores.tolist()
 
     def rerank(self,
                question:str,
                results:list[dict],
-               top_k:int = 3)->list[dict]:
+               top_k:int = 3,batch_size:int = 16)->list[dict]:
         # 1.检查输入的合法性
         if not isinstance(question,str) or not question.strip():
             raise ValueError("question must be not_empty string")
@@ -88,11 +90,19 @@ class Reranker:
             raise ValueError("results must be not_empty list")
         # 1.2 检查top_k是否为正整数，不能为bool
         if not isinstance(top_k,int) or isinstance(top_k,bool)or top_k<=0:
-            raise ValueError("top_k must be not_negative integer")
+            raise ValueError("top_k must be positive integer")
+        #如果某一字典没有document,会产生keyError。如果字段存在但内容为空，也会传递到后面的计算函数
+        for result in results:
+            if not isinstance(result,dict) :
+                raise ValueError("each result must be a dict")
+            document = result.get("document")
+
+            if not isinstance(document,str) or not document.strip():
+                raise ValueError("document must be not_empty string")
         # 2.提取所有Chunk的document
         documents = [result["document"] for result in results]
         # 3.调用compute_scores()计算相关性分数
-        scores = self.compute_scores(question,documents)
+        scores = self.compute_scores(question,documents,batch_size=batch_size)
         # 4.将分数保存到对应的result中
         for item,score in zip(results,scores):
             item["score"] = float(score)

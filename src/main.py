@@ -57,6 +57,11 @@ def create_rag_result(question:str) ->dict:
         "retrieval_time":0.0,
 
         #重排序耗时
+        #模型初始化时间
+        "rerank_init_time":0.0,
+        #推理时间
+        "rerank_inference_time":0.0,
+        #总耗时
         "rerank_time":0.0,
         #是否通过相关性判断
         "is_relevant":False,
@@ -102,19 +107,24 @@ def main():
             result["status"] = "success"
             result["answer"] = "当前知识库没有检索到相关资料。"
             return result
-
-        # 8. 执行重排序，并记录耗时
+        primary_results = reference["primary_results"]
+        print("检索候选文本数量：", len(primary_results))
+        # 8. 执行重排序，分别记录初始化和推理耗时
+        #记录整个重排序阶段开始时间
         start_time = time.perf_counter()
-
+        # 1.获取或初始化Reranker
+        init_time = time.perf_counter()
         reranker = get_reranker()
+        result["rerank_init_time"] = time.perf_counter() - init_time
+        # 2.推理耗时
+        inference_start = time.perf_counter()
         ranked_results = reranker.rerank(
             question=question,
             results=reference["primary_results"],
             top_k=3
         )
-
+        result["rerank_inference_time"] = time.perf_counter() - inference_start
         result["rerank_time"] = time.perf_counter() - start_time
-
         # 9. 更新重排序结果
         result["results"] = ranked_results
 
@@ -162,6 +172,8 @@ if __name__ == "__main__":
     print("执行状态：", result["status"])
     print("相关性判断：", result["is_relevant"])
     print("检索耗时：", result["retrieval_time"])
-    print("重排序耗时", result["rerank_time"])
+    print("Reranker初始化耗时：", result["rerank_init_time"])
+    print("Reranker推理耗时：", result["rerank_inference_time"])
+    print("Reranker总耗时：", result["rerank_time"])
     print("模型回答", result["answer"])
     print("模型错误:", result["error"])
