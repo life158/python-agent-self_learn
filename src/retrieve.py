@@ -25,14 +25,17 @@ def retrieve(question:str,collection,k:int=3)->dict:
         # 5.调用 collection.query()检索 Top-k
         result = collection.query(query_embeddings=[query], n_results=min(count, k),
                                   include=["documents", "metadatas", "distances"])
+        ids = result["ids"][0]
         documents = result["documents"][0]
         metadatas = result["metadatas"][0]
         distances = result["distances"][0]
         primary_results = []
         fallback_results = []
+        all_results = []
         threshold = 0.8
-        for document, metadata, distance in zip(documents, metadatas, distances):
+        for doc_id,document, metadata, distance in zip(ids,documents, metadatas, distances):
             item = {
+                "id": doc_id,
                 "document": document,
                 "metadata": metadata,
                 "distance": distance
@@ -41,11 +44,13 @@ def retrieve(question:str,collection,k:int=3)->dict:
                 primary_results.append(item)
             else:
                 fallback_results.append(item)
+            all_results.append(item)
 
         # 6.返回检索结果
         return {
             "primary_results": primary_results,
-            "fallback_results": fallback_results
+            "fallback_results": fallback_results,
+            "all_results": all_results
         }
     except Exception:
         logger.exception("chroma检索或结果处理失败!")
@@ -96,13 +101,26 @@ if __name__ == "__main__":
     #     print("距离：", item["distance"])
     #     print("来源：", item["metadata"].get("source"))
     #     print("-" * 30)
-    fake_collection = FakeCollection()
-    try:
-        result = retrieve(
-            "测试Chroma异常",
-            fake_collection,
-            k=3
-        )
-        print(result)
-    except Exception as e:
-        print("捕获到异常",e)
+    # fake_collection = FakeCollection()
+    # try:
+    #     result = retrieve(
+    #         "测试Chroma异常",
+    #         fake_collection,
+    #         k=3
+    #     )
+    #     print(result)
+    # except Exception as e:
+    #     print("捕获到异常",e)
+    from src.vector_store import get_collection
+    collection = get_collection()
+    result = retrieve(question="什么是RAG?",collection=collection,k=3)
+    print("============检索结果==================")
+    for item in result["primary_results"]+result["fallback_results"]:
+        print("ID",item["id"])
+        print("文本",item["document"][:100])
+        print("距离: ",item["distance"])
+        print("来源: ",item["metadata"].get("source"))
+        print("-" * 40)
+
+    for item in result["all_results"]:
+        print(item["id"],item["distance"])

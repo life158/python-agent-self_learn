@@ -1,6 +1,6 @@
 import pytest
 
-from src.evaluation import precision_at_k,recall_at_k,reciprocal_rank,mean_reciprocal_rank,evaluate_retrieval
+from src.evaluation import precision_at_k,recall_at_k,reciprocal_rank,mean_reciprocal_rank,evaluate_retrieval,convert_to_relevance
 
 def test_precision_at_k():
     results = [1,0,1,0,0]
@@ -135,3 +135,41 @@ def test_evaluate_retrieval_invalid_k(invalid_k):
     with pytest.raises(ValueError):
         evaluate_retrieval(results=[1,0,1,0],k=invalid_k,total_relevant=5)
 
+
+#测试convert_to_relevance()
+
+#正常情况
+def test_convert_to_relevant():
+    retrieved_doc_ids = [
+        "doc_001",
+        "doc_001",
+        "doc_002",
+        "doc_003"
+    ]
+
+    relevant_doc_ids = [
+        "doc_001",
+        "doc_003"
+    ]
+    original_ids = retrieved_doc_ids.copy()
+
+    assert convert_to_relevance(retrieved_doc_ids,relevant_doc_ids) ==[1,1,0,1]
+    assert  retrieved_doc_ids == original_ids
+
+
+#非法输入
+@pytest.mark.parametrize(
+    "invalid_retrieved_doc_ids",[[],"abc"]
+)
+def test_convert_to_relevant_invalid_retrieved_doc_ids(invalid_retrieved_doc_ids):
+    with pytest.raises(ValueError):
+        convert_to_relevance(invalid_retrieved_doc_ids,relevant_doc_ids=["doc_001"])
+
+
+@pytest.mark.parametrize(
+    "invalid_relevant_doc_ids",[[],"abc"]
+)
+
+def test_convert_to_relevant_invalid_relevant_doc_ids(invalid_relevant_doc_ids):
+    with pytest.raises(ValueError):
+        convert_to_relevance(retrieved_doc_ids=["doc_001", "doc_002", "doc_003"], relevant_doc_ids=invalid_relevant_doc_ids)
